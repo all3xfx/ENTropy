@@ -1,15 +1,15 @@
 class TwentyQuestions:
-   
-    def __init__(self):      
+
+    def __init__(self):
         self.get_data()
-        
+
         self.cur_question = 0
 
     def get_data(self):
         self.data = []
-        
-        f = open("characters.txt","r")
-        
+
+        f = open("characters.csv","r")
+
         self.categories = f.readline().strip().split("\t")[1:]
         for line in f:
             l = line.strip().split("\t")
@@ -17,44 +17,44 @@ class TwentyQuestions:
             self.data.append(entry)
         print len(self.data)
         f.close()
-    
+
     def getEntropy(self):
         return
 
     def ask_question(self):
         """Decides which tree-building algorithm to use based on how far into the game it is"""
-        
+
         self.cur_question += 1
-        
+
         if self.cur_question < 2:
             q = self.ask_alg1()
         else:
             q = self.ask_alg2()
         return q
-        
+
     def ask_alg1(self):
         """Choose the questions that split the data (approximately) in half so as to optimally narrow down the possible solutions."""
-        
+
         bestApprox = 1
         bestCategory = 0
-        
+
         for i in range(len(categories)):
-            
-        
+
+
         return "Is it human?"
-        
+
     def ask_alg2(self):
         return "Does it have four hooves, a horn, and a tail?"
-        
+
     def answer_question(self, answer):
         pass
-        
+
     def guess(self):
         return "ponies"
-        
+
     def process_results(self, answer):
         """Called once twenty questions is over. If the correct answer was guessed, increment the counter in the database representing the number of times that answer has been thought of before. If the incorrect answer was guessed, add that entry to the database."""
-        
+
         if answer == "Y":
             pass
         else:
@@ -66,12 +66,12 @@ class TwentyQuestions:
         print "| ENTropy - 20 Questions for Literary Characters |"
         print "|" + "by Katherine Siegal & Veronica Lynn".center(48)  + "|"
         print " " + "_" * 48
-        print 
+        print
         for i in range(2):
             a = raw_input("{}) {} ".format(i + 1, self.ask_question()))
             print
             self.answer_question(a)
-        
+
         print "WERE YOU THINKING OF..."
         print self.guess() + "?"
         a = raw_input("Y or N: ")
@@ -81,4 +81,4 @@ class TwentyQuestions:
 if __name__ == "__main__":
     twentyqs = TwentyQuestions()
     twentyqs.run()
-        
+
