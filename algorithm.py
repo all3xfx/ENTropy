@@ -1,12 +1,22 @@
 class TwentyQuestions:
    
     def __init__(self):      
-        self.data = self.get_data()
+        self.get_data()
         
         self.cur_question = 0
 
     def get_data(self):
-        return
+        self.data = []
+        
+        f = open("characters.txt","r")
+        
+        self.categories = f.readline().strip().split("\t")[1:]
+        for line in f:
+            l = line.strip().split("\t")
+            entry = (l[0], l[1:])
+            self.data.append(entry)
+        print len(self.data)
+        f.close()
     
     def getEntropy(self):
         return
@@ -24,6 +34,12 @@ class TwentyQuestions:
         
     def ask_alg1(self):
         """Choose the questions that split the data (approximately) in half so as to optimally narrow down the possible solutions."""
+        
+        bestApprox = 1
+        bestCategory = 0
+        
+        for i in range(len(categories)):
+            
         
         return "Is it human?"
         
