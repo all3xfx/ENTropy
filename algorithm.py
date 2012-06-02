@@ -1,3 +1,5 @@
+import math
+
 class TwentyQuestions:
 
     def __init__(self):
@@ -38,7 +40,21 @@ class TwentyQuestions:
         bestApprox = 1
         bestCategory = 0
 
-        for i in range(len(categories)):
+        for i in range(len(self.categories)):
+            numYes = 0
+            numUnknown = 0
+            for j in range(len(self.data)):
+                if self.data[j] = "Yes":
+                    numYes += 1
+                if self.data[j] = "Unknown":
+                    numUnknown += 1
+            fracYes = float(numYes+numUnknown)/(len(self.data)+2*numUnknown)
+            distFromHalf = abs(fracYes - .5)
+            if distFromHalf < bestApprox:
+                bestApprox = distFromHalf
+                bestCategory = self.categories[i]
+        return bestCategory
+
 
 
         return "Is it human?"
