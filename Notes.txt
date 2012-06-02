@@ -1,6 +1,5 @@
 -Database for answers
 
-
 Capabilities:
     -If the person is new, add answers to questions
     -If person is not new, keep track of how many times they're chosen
@@ -9,7 +8,12 @@ Capabilities:
 Names?:
     A Decision Treebeard Grows in Brooklyn
     ENTreepy
-    
-    
+
 BG: 
     #69CE04
+
+
+PLAN OF ATTACK
+    At least at first, choose questions that get closest to splitting data in half
+
+
