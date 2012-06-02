@@ -4,8 +4,6 @@ class TwentyQuestions:
         self.data = self.get_data()
         
         self.cur_question = 0
-        self.cur_guess = ""
-        
 
     def get_data(self):
         return
