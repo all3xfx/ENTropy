@@ -36,8 +36,8 @@ def decisiondattree(categories, data, node, level):
                     print "--"*(len(tree)-level + 1) + "if", child + ", then NO"
         return
     
-    minIG = float('infinity')
-    minCategory = None
+    maxIG = float('-infinity')
+    maxCategory = None
     
     entropyOrig = getEntropy(data)
     
@@ -63,17 +63,17 @@ def decisiondattree(categories, data, node, level):
             infoGain = entropyOrig - entropyWeightedAvg
             
             # Check if this is the best split yet (minimizes information gain)
-            if infoGain < minIG:
-                minIG = infoGain
-                minCategory = category
+            if infoGain > maxIG:
+                maxIG = infoGain
+                maxCategory = category
                 
     # Make the best split
-    i = categories.index(minCategory)
+    i = categories.index(maxCategory)
     newCategories = categories[:i] + categories[i+1:]
     
     
-    tree[level].append((node, minCategory))
-    print "--"*(len(tree)-level) + "if", node + ", split on", minCategory
+    tree[level].append((node, maxCategory))
+    print "--"*(len(tree)-level) + "if", node + ", split on", maxCategory
     
     # Recursively split tree at next level
     for child in getChildren(data,i):
