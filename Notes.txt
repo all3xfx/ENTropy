@@ -1,0 +1,15 @@
+-Database for answers
+
+
+Capabilities:
+    -If the person is new, add answers to questions
+    -If person is not new, keep track of how many times they're chosen
+  
+  
+Names?:
+    A Decision Treebeard Grows in Brooklyn
+    ENTreepy
+    
+    
+BG: 
+    #69CE04
