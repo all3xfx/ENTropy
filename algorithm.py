@@ -6,6 +6,7 @@ by Veronica Lynn and Katherine Siegal
 
 
 import math
+from db import *
 
 class TwentyQuestions:
 
@@ -13,6 +14,10 @@ class TwentyQuestions:
         self.get_data()
 
         self.cur_question = 0
+
+        self.categories = Questions.select()
+
+        self.answerPath = []
 
     def get_data(self):
         self.data = []
@@ -34,40 +39,35 @@ class TwentyQuestions:
 
         self.cur_question += 1
 
-        if self.cur_question < 10:
-            q = self.ask_alg1()
+        if self.cur_question == 1:
+            q = self.askFirstQuestion
         else:
-            q = self.ask_alg2()
+            q = self.askAlg
         return q
 
-    def ask_alg1(self):
-        """Choose the questions that split the data (approximately) in half so as to optimally narrow down the possible solutions."""
-
+    def askFirstQuestion(self):
+        """Chooses the first question to ask based on what splits the data most evenly."""
         bestApprox = 1
         bestCategory = 0
 
-        for i in range(len(self.categories)):
-            numYes = 0
-            numUnknown = 0
-            for j in range(len(self.data)):
-                if self.data[j][1][i] == "Yes":
-                    numYes += 1
-                if self.data[j][1][i] == "Unknown":
-                    numUnknown += 1
-            fracYes = float(numYes+numUnknown)/(len(self.data)+2*numUnknown)
-            distFromHalf = abs(fracYes - .5)
+        for category in self.categories:
+            numYes = Answers.filter(question=category).filter(answer__gte=1).count()
+            numUnknown = Answers.filter(question=category).filter(answer=0).count()
+            fracYes = float(numYes + numUnknown)/(Characters.select().count()+2*numUnknown)
+
+            distfromHalf = abs(fracYes - .5)
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
-                bestCategory = self.categories[i]
+                bestCategory = category
+        self.categories = self.categories.filter(question__ne=category.question)
+        return category.question
 
-        self.cur_category = bestCategory
-        return bestCategory
+    def askAlg(self):
+        """Chooses the optimal question..."""
 
-    def ask_alg2(self):
-        return "Does it have four hooves, a horn, and a tail?"
 
     def answer_question(self, answer):
-        new = []
+
 
         for item in self.data:
             index = self.categories.index(self.cur_category)
