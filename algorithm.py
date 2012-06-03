@@ -1,3 +1,10 @@
+"""
+Literature-themed 20 questions
+by Veronica Lynn and Katherine Siegal
+4 June 2012
+"""
+
+
 import math
 
 class TwentyQuestions:
@@ -53,7 +60,7 @@ class TwentyQuestions:
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
                 bestCategory = self.categories[i]
-                
+
         return bestCategory
 
     def ask_alg2(self):
@@ -61,8 +68,8 @@ class TwentyQuestions:
 
     def answer_question(self, answer):
         pass
-        
-        
+
+
     def guess(self):
         return "ponies"
 
