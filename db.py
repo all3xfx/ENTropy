@@ -20,7 +20,7 @@ class Answers(BaseModel):
     answer = IntegerField()
     
 class Weights(BaseModel):
-    character = ForeignKeyField(Characters)
+    character = ForeignKeyField(Characters, related_name="weight")
     weight = DecimalField()
 
 def createTables():
@@ -64,6 +64,9 @@ def addAnswers(data):
             Answers.get_or_create(character = cs[j], question = qs[i])
 
 def addWeights():
+    Weights.drop_table()
+    Weights.create_table()
+    
     for character in Characters.select():
         chance = float(character.timesGuessed) / Characters.select().count()
         Weights.get_or_create(character = character, weight = chance)
