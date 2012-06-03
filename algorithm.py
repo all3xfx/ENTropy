@@ -7,6 +7,8 @@ by Veronica Lynn and Katherine Siegal
 
 import math
 from db import *
+from time import time
+
 
 class TwentyQuestions:
 
@@ -20,13 +22,6 @@ class TwentyQuestions:
         self.answerPath = []
 
         self.likelyCharacter = 0
-
-        Weights.drop_table(True)
-        Weights.create_table()
-
-        for character in Characters.select():
-            chance = float(character.timesGuessed)/Characters.select().count()
-            Weights.get_or_create(character=character, weight=chance)
 
     def getEntropy(self, total):
         """Docstrings here, get yer docstrings!"""
@@ -51,7 +46,8 @@ class TwentyQuestions:
         """Chooses the first question to ask based on what splits the data most evenly."""
         bestApprox = 1
         bestCategory = 0
-
+        
+        t1 = time()
         for category in self.categories:
             numYes = Answers.filter(question=category).filter(answer__gte=1).count()
             numUnknown = Answers.filter(question=category).filter(answer=0).count()
@@ -61,6 +57,8 @@ class TwentyQuestions:
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
                 bestCategory = category
+        t2 = time()
+        print "Ask first:", t2-t1
         return bestCategory
 
     def askAlg(self):
@@ -69,6 +67,7 @@ class TwentyQuestions:
         maxInfoGain = 0
         bestQuestion = 0
 
+        t1 = time()
         for question in self.categories:
             if Answers.filter(question=question).filter(character=self.likelyCharacter).count() > 0:
                 answer = [a.answer for a in Answers.filter(question=question).filter(character=self.likelyCharacter)][0]
@@ -85,6 +84,8 @@ class TwentyQuestions:
                         maxInfoGain = infoGain
                         bestQuestion = question
 
+        t2 = time()
+        print "Ask next:", t2-t1
         return bestQuestion
 
     def answer_question(self, question, answer):
@@ -95,9 +96,12 @@ class TwentyQuestions:
         self.answerPath.append((question,answer))
         self.categories = self.categories.filter(question__ne=question.question)
 
+        t1 = time()
         for character in Characters.select():
             value = [v.answer for v in Answers.filter(character=character).filter(question=question)][0]
             weight = [w for w in Weights.filter(character=character)][0]
+            if self.cur_question == 1:
+                weight.weight = float(character.timesGuessed)/Characters.select().count()
 
             if answer == "Y":
                 weight.weight += value
@@ -110,7 +114,8 @@ class TwentyQuestions:
                 mostLikelyChar = character
 
         self.likelyCharacter = mostLikelyChar
-
+        t2 = time()
+        print "Answer question:", t2-t1
 
     def guess(self):
         return self.likelyCharacter.name
