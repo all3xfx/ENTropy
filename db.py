@@ -8,7 +8,7 @@ class BaseModel(Model):
 
 class Characters(BaseModel):
     name = CharField(unique = True)
-    book = CharField()
+    #book = CharField()
     timesGuessed = IntegerField()
     
 class Questions(BaseModel):
@@ -56,12 +56,20 @@ def addQuestions():
     f.close()
     
 def addAnswers(data):
-    qs = [q for q in Questions.select()][:13]
+    qs = [q for q in Questions.select()]
     cs = [c for c in Characters.select()]
     
     for i in range(len(qs)):
+        print qs[i].question
         for j in range(len(cs)):
-            Answers.get_or_create(character = cs[j], question = qs[i])
+            if i < 13:
+                try:
+                    data[j][i]
+                except:
+                    print "ERROR:", cs[j].name, data[j]
+                Answers.get_or_create(character = cs[j], question = qs[i], answer=data[j][i])
+            else:
+                Answers.get_or_create(character=cs[j], question=qs[i])
 
 def addWeights():
     Weights.drop_table()
@@ -70,3 +78,14 @@ def addWeights():
     for character in Characters.select():
         chance = float(character.timesGuessed) / Characters.select().count()
         Weights.get_or_create(character = character, weight = chance)
+
+    
+"""createTables()
+print "Questions..."
+addQuestions()
+print "Characters..."
+c = addCharacters()
+print "Answers..."
+addAnswers(c)
+print "Weights..."
+addWeights()"""

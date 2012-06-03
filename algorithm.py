@@ -6,7 +6,7 @@ by Veronica Lynn and Katherine Siegal
 
 
 import math
-from db import *
+from db import Characters, Questions, Answers, Weights
 from time import time
 
 
@@ -138,7 +138,7 @@ class TwentyQuestions:
         print " " + "_" * 48
         print
 
-        for i in range(4):
+        for i in range(2):
             question = self.ask_question()
             a = raw_input("{}) {} ".format(i + 1, question.question))
             print
