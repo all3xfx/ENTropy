@@ -22,7 +22,7 @@ class TwentyQuestions:
         self.answerPath = []
 
         self.likelyCharacter = 0
-        
+
         self.weights = {}
 
     def getEntropy(self, total):
@@ -48,7 +48,7 @@ class TwentyQuestions:
         """Chooses the first question to ask based on what splits the data most evenly."""
         bestApprox = 1
         bestCategory = 0
-        
+
         t1 = time()
         for category in self.categories:
             numYes = Answers.filter(question=category).filter(answer__gte=1).count()
@@ -109,7 +109,7 @@ class TwentyQuestions:
                 self.weights[character] += value
             elif answer == "N":
                 self.weights[character] -= value
-                
+
             #weight.save()
 
             if self.weights[character] > greatestWeight:
