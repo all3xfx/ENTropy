@@ -19,11 +19,15 @@ class Answers(BaseModel):
     question = ForeignKeyField(Questions)
     answer = IntegerField()
     
-    
+class Weights(BaseModel):
+    character = ForeignKeyField(Characters)
+    weight = DecimalField()
+
 def createTables():
     Characters.create_table(True)
     Questions.create_table(True)
     Answers.create_table(True)
+    Weights.create_table(True)
     
 def addCharacters():
     f2 = open("characters.txt","r")
@@ -58,3 +62,12 @@ def addAnswers(data):
     for i in range(len(qs)):
         for j in range(len(cs)):
             Answers.get_or_create(character = cs[j], question = qs[i])
+
+def addWeights():
+    for character in Characters.select():
+        chance = float(character.timesGuessed) / Characters.select().count()
+        Weights.get_or_create(character = character, weight = chance)
+    
+createTables()
+addWeights()
+
