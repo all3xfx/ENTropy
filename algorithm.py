@@ -6,7 +6,7 @@ by Veronica Lynn and Katherine Siegal
 
 
 import math
-from db import Characters, Questions, Answers, Weights
+from db import Characters, Questions, Answers, database
 from time import time
 
 
@@ -22,6 +22,8 @@ class TwentyQuestions:
         self.answerPath = []
 
         self.likelyCharacter = 0
+        
+        self.weights = {}
 
     def getEntropy(self, total):
         """Docstrings here, get yer docstrings!"""
@@ -99,20 +101,20 @@ class TwentyQuestions:
         t1 = time()
         for character in Characters.select():
             value = Answers.select().get(character=character, question=question).answer
-            weight = Weights.select().get(character=character)
-            if self.cur_question == 1:
-                weight.weight = float(character.timesGuessed)/Characters.select().count()
+            #weight = Weights.select().get(character=character)
+            if character not in self.weights:
+                self.weights[character] = float(character.timesGuessed)/Characters.select().count()
 
             if answer == "Y":
-                weight.weight += value
+                self.weights[character] += value
             elif answer == "N":
-                weight.weight -= value
-            weight.save()
+                self.weights[character] -= value
+                
+            #weight.save()
 
-            if weight.weight > greatestWeight:
-                greatestWeight = weight.weight
+            if self.weights[character] > greatestWeight:
+                greatestWeight = self.weights[character]
                 mostLikelyChar = character
-
         self.likelyCharacter = mostLikelyChar
         t2 = time()
         print "Answer question:", t2-t1
@@ -138,7 +140,7 @@ class TwentyQuestions:
         print " " + "_" * 48
         print
 
-        for i in range(2):
+        for i in range(20):
             question = self.ask_question()
             a = raw_input("{}) {} ".format(i + 1, question.question))
             print

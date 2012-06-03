@@ -8,7 +8,6 @@ class BaseModel(Model):
 
 class Characters(BaseModel):
     name = CharField(unique = True)
-    #book = CharField()
     timesGuessed = IntegerField()
     
 class Questions(BaseModel):
@@ -71,21 +70,10 @@ def addAnswers(data):
             else:
                 Answers.get_or_create(character=cs[j], question=qs[i])
 
-def addWeights():
-    Weights.drop_table()
-    Weights.create_table()
-    
-    for character in Characters.select():
-        chance = float(character.timesGuessed) / Characters.select().count()
-        Weights.get_or_create(character = character, weight = chance)
-
-    
 """createTables()
 print "Questions..."
 addQuestions()
 print "Characters..."
 c = addCharacters()
 print "Answers..."
-addAnswers(c)
-print "Weights..."
-addWeights()"""
+addAnswers(c)"""
