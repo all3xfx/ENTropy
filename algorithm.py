@@ -70,7 +70,7 @@ class TwentyQuestions:
         t1 = time()
         for question in self.categories:
             if Answers.filter(question=question).filter(character=self.likelyCharacter).count() > 0:
-                answer = [a.answer for a in Answers.filter(question=question).filter(character=self.likelyCharacter)][0]
+                answer = Answers.select().get(question=question, character=self.likelyCharacter).answer
 
                 if answer != 0:
                     if answer >= 1:
@@ -98,8 +98,8 @@ class TwentyQuestions:
 
         t1 = time()
         for character in Characters.select():
-            value = [v.answer for v in Answers.filter(character=character).filter(question=question)][0]
-            weight = [w for w in Weights.filter(character=character)][0]
+            value = Answers.select().get(character=character, question=question).answer
+            weight = Weights.select().get(character=character)
             if self.cur_question == 1:
                 weight.weight = float(character.timesGuessed)/Characters.select().count()
 

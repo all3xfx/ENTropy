@@ -70,7 +70,3 @@ def addWeights():
     for character in Characters.select():
         chance = float(character.timesGuessed) / Characters.select().count()
         Weights.get_or_create(character = character, weight = chance)
-    
-createTables()
-addWeights()
-
