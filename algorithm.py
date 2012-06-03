@@ -17,14 +17,13 @@ class TwentyQuestions:
     def get_data(self):
         self.data = []
 
-        f = open("characters.csv","r")
+        f = open("characters.txt","r")
 
         self.categories = f.readline().strip().split("\t")[1:]
         for line in f:
             l = line.strip().split("\t")
             entry = (l[0], l[1:])
             self.data.append(entry)
-        print len(self.data)
         f.close()
 
     def getEntropy(self):
@@ -35,7 +34,7 @@ class TwentyQuestions:
 
         self.cur_question += 1
 
-        if self.cur_question < 2:
+        if self.cur_question < 10:
             q = self.ask_alg1()
         else:
             q = self.ask_alg2()
@@ -51,9 +50,9 @@ class TwentyQuestions:
             numYes = 0
             numUnknown = 0
             for j in range(len(self.data)):
-                if self.data[j] == "Yes":
+                if self.data[j][1][i] == "Yes":
                     numYes += 1
-                if self.data[j] == "Unknown":
+                if self.data[j][1][i] == "Unknown":
                     numUnknown += 1
             fracYes = float(numYes+numUnknown)/(len(self.data)+2*numUnknown)
             distFromHalf = abs(fracYes - .5)
@@ -61,17 +60,23 @@ class TwentyQuestions:
                 bestApprox = distFromHalf
                 bestCategory = self.categories[i]
 
+        self.cur_category = bestCategory
         return bestCategory
 
     def ask_alg2(self):
         return "Does it have four hooves, a horn, and a tail?"
 
     def answer_question(self, answer):
-        pass
+        new = []
 
+        for item in self.data:
+            index = self.categories.index(self.cur_category)
+            if item[1][index] == answer:
+                new.append(item)
+         self.data = new
 
     def guess(self):
-        return "ponies"
+        return [item[0] for item in self.data]
 
     def process_results(self, answer):
         """Called once twenty questions is over. If the correct answer was guessed, increment the counter in the database representing the number of times that answer has been thought of before. If the incorrect answer was guessed, add that entry to the database."""
@@ -88,13 +93,13 @@ class TwentyQuestions:
         print "|" + "by Katherine Siegal & Veronica Lynn".center(48)  + "|"
         print " " + "_" * 48
         print
-        for i in range(2):
+        for i in range(5):
             a = raw_input("{}) {} ".format(i + 1, self.ask_question()))
             print
             self.answer_question(a)
 
         print "WERE YOU THINKING OF..."
-        print self.guess() + "?"
+        print self.guess()
         a = raw_input("Y or N: ")
         self.process_results(a)
 
