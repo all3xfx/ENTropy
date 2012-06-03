@@ -44,27 +44,25 @@ class TwentyQuestions:
             numYes = 0
             numUnknown = 0
             for j in range(len(self.data)):
-                if self.data[j] = "Yes":
+                if self.data[j] == "Yes":
                     numYes += 1
-                if self.data[j] = "Unknown":
+                if self.data[j] == "Unknown":
                     numUnknown += 1
             fracYes = float(numYes+numUnknown)/(len(self.data)+2*numUnknown)
             distFromHalf = abs(fracYes - .5)
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
                 bestCategory = self.categories[i]
+                
         return bestCategory
-
-
-
-        return "Is it human?"
 
     def ask_alg2(self):
         return "Does it have four hooves, a horn, and a tail?"
 
     def answer_question(self, answer):
         pass
-
+        
+        
     def guess(self):
         return "ponies"
 
