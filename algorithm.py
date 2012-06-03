@@ -17,7 +17,6 @@ class TwentyQuestions:
             l = line.strip().split("\t")
             entry = (l[0], l[1:])
             self.data.append(entry)
-        print len(self.data)
         f.close()
 
     def getEntropy(self):
@@ -69,8 +68,8 @@ class TwentyQuestions:
                 new.append(item)
         self.data = new
         
-    def guess(self):
-        return "ponies"
+    def guess(self):       
+        return [item[0] for item in self.data]
 
     def process_results(self, answer):
         """Called once twenty questions is over. If the correct answer was guessed, increment the counter in the database representing the number of times that answer has been thought of before. If the incorrect answer was guessed, add that entry to the database."""
@@ -87,13 +86,13 @@ class TwentyQuestions:
         print "|" + "by Katherine Siegal & Veronica Lynn".center(48)  + "|"
         print " " + "_" * 48
         print
-        for i in range(2):
+        for i in range(5):
             a = raw_input("{}) {} ".format(i + 1, self.ask_question()))
             print
             self.answer_question(a)
 
         print "WERE YOU THINKING OF..."
-        print self.guess() + "?"
+        print self.guess()
         a = raw_input("Y or N: ")
         self.process_results(a)
 
