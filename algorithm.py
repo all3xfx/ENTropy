@@ -11,25 +11,18 @@ from db import *
 class TwentyQuestions:
 
     def __init__(self):
-        self.get_data()
-
         self.cur_question = 0
 
         self.categories = Questions.select()
 
         self.answerPath = []
 
-    def get_data(self):
-        self.data = []
+        Weights.drop_table(True)
+        Weights.create_table()
 
-        f = open("characters.txt","r")
-
-        self.categories = f.readline().strip().split("\t")[1:]
-        for line in f:
-            l = line.strip().split("\t")
-            entry = (l[0], l[1:])
-            self.data.append(entry)
-        f.close()
+        for character in Characters.select():
+            chance = float(character.timesGuessed)/Characters.select().count()
+            Weights.get_or_create(character=character, weight=chance)
 
     def getEntropy(self):
         return
@@ -59,21 +52,19 @@ class TwentyQuestions:
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
                 bestCategory = category
-        self.categories = self.categories.filter(question__ne=category.question)
-        return category.question
+
+        return category
 
     def askAlg(self):
         """Chooses the optimal question..."""
 
 
-    def answer_question(self, answer):
+    def answer_question(self, question, answer):
+        self.answerPath.append((question,answer))
+        self.categories = self.categories.filter(question__ne=question.question)
+        if answer == "Y":
 
 
-        for item in self.data:
-            index = self.categories.index(self.cur_category)
-            if item[1][index] == answer:
-                new.append(item)
-         self.data = new
 
     def guess(self):
         return [item[0] for item in self.data]
@@ -94,9 +85,10 @@ class TwentyQuestions:
         print " " + "_" * 48
         print
         for i in range(5):
-            a = raw_input("{}) {} ".format(i + 1, self.ask_question()))
+            question = self.ask_question()
+            a = raw_input("{}) {} ".format(i + 1, question.question))
             print
-            self.answer_question(a)
+            self.answer_question(question,a)
 
         print "WERE YOU THINKING OF..."
         print self.guess()
