@@ -10,7 +10,7 @@ class TwentyQuestions:
     def get_data(self):
         self.data = []
 
-        f = open("characters.csv","r")
+        f = open("characters.txt","r")
 
         self.categories = f.readline().strip().split("\t")[1:]
         for line in f:
@@ -28,7 +28,7 @@ class TwentyQuestions:
 
         self.cur_question += 1
 
-        if self.cur_question < 2:
+        if self.cur_question < 10:
             q = self.ask_alg1()
         else:
             q = self.ask_alg2()
@@ -44,24 +44,30 @@ class TwentyQuestions:
             numYes = 0
             numUnknown = 0
             for j in range(len(self.data)):
-                if self.data[j] == "Yes":
+                if self.data[j][1][i] == "Yes":
                     numYes += 1
-                if self.data[j] == "Unknown":
+                if self.data[j][1][i] == "Unknown":
                     numUnknown += 1
             fracYes = float(numYes+numUnknown)/(len(self.data)+2*numUnknown)
             distFromHalf = abs(fracYes - .5)
             if distFromHalf < bestApprox:
                 bestApprox = distFromHalf
                 bestCategory = self.categories[i]
-                
+        
+        self.cur_category = bestCategory
         return bestCategory
 
     def ask_alg2(self):
         return "Does it have four hooves, a horn, and a tail?"
 
     def answer_question(self, answer):
-        pass
+        new = []
         
+        for item in self.data:
+            index = self.categories.index(self.cur_category)
+            if item[1][index] == answer:
+                new.append(item)
+        self.data = new
         
     def guess(self):
         return "ponies"
