@@ -8,7 +8,6 @@ by Veronica Lynn and Katherine Siegal
 import math
 import random
 from db import Characters, Questions, Answers, database
-from time import time
 
 
 class TwentyQuestions:
@@ -76,7 +75,6 @@ class TwentyQuestions:
         maxInfoGain = 0
         bestQuestion = None
 
-        t1 = time()
         for question in self.categories:
             if Answers.filter(question=question).filter(character=self.likelyCharacter).count() > 0:
                 answer = Answers.select().get(question=question, character=self.likelyCharacter).answer
@@ -92,8 +90,6 @@ class TwentyQuestions:
                         maxInfoGain = infoGain
                         bestQuestion = question
 
-        t2 = time()
-        print "Ask next:", t2-t1
         if not bestQuestion:
             randIndex = random.randint(1, Questions.select().count())
             while self.categories.where(id=randIndex).count() == 0:
@@ -109,7 +105,6 @@ class TwentyQuestions:
         self.answerPath.append((question,answer))
         self.categories = self.categories.filter(question__ne=question.question)
 
-        t1 = time()
         for character in Characters.select():
             value = Answers.select().get(character=character, question=question).answer
             if character.name not in self.weights:
@@ -123,9 +118,6 @@ class TwentyQuestions:
             if self.weights[character.name] > greatestWeight:
                 greatestWeight = self.weights[character.name]
                 mostLikelyChar = character
-        self.likelyCharacter = mostLikelyChar
-        print mostLikelyChar.name, self.weights[mostLikelyChar.name]
-        t2 = time()
         print "Answer question:", t2-t1
 
     def guess(self):
