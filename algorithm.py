@@ -90,7 +90,10 @@ class TwentyQuestions:
         t2 = time()
         print "Ask next:", t2-t1
         if not bestQuestion:
-            bestQuestion = self.askFirstQuestion()
+            randIndex = random.randint(1, Questions.select().count())
+            while self.categories.where(id=randIndex).count() == 0:
+                randIndex = random.randint(1, Questions.select().count())
+            bestQuestion = self.categories.get(id=randIndex)
         return bestQuestion
 
     def answer_question(self, question, answer):
