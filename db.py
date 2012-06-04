@@ -1,3 +1,9 @@
+"""
+20 Questions Database Structure
+by Katherine Siegal & Veronica Lynn
+4 June 2012
+"""
+
 from peewee import *
 
 database = SqliteDatabase('characters.db')
