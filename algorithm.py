@@ -6,6 +6,7 @@ by Veronica Lynn and Katherine Siegal
 
 
 import math
+import random
 from db import Characters, Questions, Answers, database
 from time import time
 
@@ -43,7 +44,11 @@ class TwentyQuestions:
         self.cur_question += 1
 
         if self.cur_question == 1:
-            q = self.askFirstQuestion()
+            #q = self.askFirstQuestion()
+            randIndex = random.randint(1, Questions.select().count())
+            while self.categories.where(id=randIndex).count() == 0:
+                randIndex = random.randint(1, Questions.select().count())
+            q = self.categories.get(id=randIndex)
         else:
             q = self.askAlg()
         return q
