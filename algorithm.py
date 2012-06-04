@@ -137,11 +137,18 @@ class TwentyQuestions:
             if self.weights[character.name] > greatestWeight:
                 greatestWeight = self.weights[character.name]
                 mostLikelyChar = character
+        self.likelyCharacter = character
 
     def guess(self):
         """Guesses the character that is our best guess at the time"""
         
-        return self.likelyCharacter.name
+        if self.likelyCharacter:
+            return self.likelyCharacter.name
+        else:
+            randIndex = random.randint(1, Characters.select().count())
+            while Characters.select().where(id=randIndex).count() == 0:
+                randIndex = random.randint(1, Characters.select().count())
+            return Characters.get(id=randIndex).name
 
     def process_results(self, answer):
         """Called once twenty questions is over. If the correct answer was guessed, increment the counter in the database representing the number of times that answer has been thought of before. If the incorrect answer was guessed, add that entry to the database."""
