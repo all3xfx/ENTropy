@@ -104,19 +104,19 @@ class TwentyQuestions:
         t1 = time()
         for character in Characters.select():
             value = Answers.select().get(character=character, question=question).answer
-            if character not in self.weights:
-                self.weights[character] = float(character.timesGuessed)/Characters.select().count()
+            if character.name not in self.weights:
+                self.weights[character.name] = float(character.timesGuessed)/Characters.select().count()
 
             if answer.lower() == "y" or answer.lower() == "yes":
-                self.weights[character] += value
+                self.weights[character.name] += value
             elif answer.lower() == "n" or answer.lower() == "no":
-                self.weights[character] -= value
+                self.weights[character.name] -= value
 
-            if self.weights[character] > greatestWeight:
-                greatestWeight = self.weights[character]
+            if self.weights[character.name] > greatestWeight:
+                greatestWeight = self.weights[character.name]
                 mostLikelyChar = character
         self.likelyCharacter = mostLikelyChar
-        print mostLikelyChar.name
+        print mostLikelyChar.name, self.weights[mostLikelyChar.name]
         t2 = time()
         print "Answer question:", t2-t1
 
